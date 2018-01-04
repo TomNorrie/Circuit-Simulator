@@ -1,0 +1,101 @@
+Sample Input 1
+INPUTVAR 3 IN1 IN2 IN3
+OUTPUTVAR 1 OUT1
+AND IN1 IN2 temp1
+AND IN1 IN3 temp2
+OR temp1 temp2 OUT1
+
+
+Sample Input 2
+INPUTVAR 4 IN1 IN2 IN3 IN4
+OUTPUTVAR 1 OUT1
+OR IN3 IN4 temp1
+AND IN1 IN2 temp2
+MULTIPLEXER 4 0 1 0 1 temp2 temp1 OUT1
+
+
+Input specifications:
+
+INPUTVAR [count] <var> <var> <var> ...
+OUTPUTVAR [count] <var> <var> <var> ...
+NOT <in> <out>
+AND <in1> <in2> <out>
+OR <in1> <in2> <out>
+NAND <in1> <in2> <out>
+XOR <in1> <in2> <out>
+DECODER [num inputs] <in1> <in2> ... <out1> <out2> <out3> <out4> ...
+MULTIPLEXER [num inputs] <in1> <in2> ... <out>
+
+
+First letters
+A and
+D decoder
+I inputvar
+M multiplexer
+N nand
+N nor
+N not
+O or
+O outputvar
+X xor
+
+
+
+
+Need to store all the vars in some kind of hashtable
+
+Multiplicative Hash:
+
+unsigned int hash(const char* key, size_t len)
+{
+	unsigned int = initial_val;
+	for(i=0; i < len; i++)
+	{
+		hash = M * hash + key[i];
+	}
+	return hash % table_size
+}
+
+
+Sample Output:
+
+0 0 0 0
+0 0 1 0
+0 1 1 0
+0 1 0 0
+1 1 0 1
+1 1 1 1
+1 0 1 1
+1 0 0 0
+
+The output of the first three columns are INPUTVAR IN1, IN2, and IN3 respectively. And the last column denotes as the OUTPUTVAR OUT1.
+
+
+
+--------------------
+
+
+Sorting the circuit
+
+For gates A, B, if A has outputs that match B's inputs, A must come before B
+
+Use this to construct a directed graph, and then sort it topologically
+
+
+Graph is a list of vertices, and edges
+
+Topological Sort:
+
+L ← Empty list that will contain the sorted nodes
+while there are unmarked nodes do
+	select an unmarked node n
+	visit(n)
+
+function visit(node n)
+	if n has a permanent mark then return
+	if n has a temporary mark then stop (not a DAG)
+	mark n temporarily
+	for each node m with an edge from n to m do
+		visit(m)
+	mark n permanently
+	add n to head of L
